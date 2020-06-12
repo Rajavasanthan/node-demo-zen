@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const app = express();
-console.log(process)
+
 app.use(bodyParser.json());
 let productData = [];
 
-
+app.get("/",(req,res) => {
+     res.send("Welcome")
+})
 app.post("/product",(req,res) => {
      productData.push(req.body);
      res.json({
@@ -21,7 +23,7 @@ app.get("/product",(req,res) => {
 
 
 app.listen(process.env.PORT | 3000,() => {
-     console.log("App is listening in PORT 3000")
+     console.log("App is listening in PORT " + process.env.PORT)
 });
 
 
