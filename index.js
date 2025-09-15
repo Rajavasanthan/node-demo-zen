@@ -6,8 +6,26 @@ const app = express();
 app.use(bodyParser.json());
 let productData = [];
 
+// Simple user data storage (in production, use a database)
+let userData = [
+     { id: 1, username: "admin", password: "admin123" },
+     { id: 2, username: "user", password: "user123" }
+];
+
 app.get("/",(req,res) => {
-     res.send("Welcome")
+     res.json({
+          message: "Welcome to the API",
+          endpoints: {
+               "GET /": "Welcome message and available endpoints",
+               "POST /product": "Create a new product",
+               "GET /product": "Get all products", 
+               "POST /login": "User login (requires username and password)"
+          },
+          sampleUsers: [
+               { username: "admin", password: "admin123" },
+               { username: "user", password: "user123" }
+          ]
+     })
 })
 app.post("/product",(req,res) => {
      productData.push(req.body);
@@ -19,6 +37,38 @@ app.post("/product",(req,res) => {
 
 app.get("/product",(req,res) => {
      res.json(productData);
+})
+
+// Login route
+app.post("/login", (req, res) => {
+     const { username, password } = req.body;
+     
+     // Validate input
+     if (!username || !password) {
+          return res.status(400).json({
+               success: false,
+               message: "Username and password are required"
+          });
+     }
+     
+     // Find user in userData
+     const user = userData.find(u => u.username === username && u.password === password);
+     
+     if (user) {
+          res.json({
+               success: true,
+               message: "Login successful",
+               user: {
+                    id: user.id,
+                    username: user.username
+               }
+          });
+     } else {
+          res.status(401).json({
+               success: false,
+               message: "Invalid username or password"
+          });
+     }
 })
 
 
