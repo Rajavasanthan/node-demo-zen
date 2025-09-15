@@ -21,6 +21,42 @@ app.get("/product",(req,res) => {
      res.json(productData);
 })
 
+// Login Routes
+app.get("/login",(req,res) => {
+     res.json({
+          message: "Login page - Send POST request with username and password"
+     })
+})
+
+app.post("/login",(req,res) => {
+     const { username, password } = req.body;
+     
+     // Simple hardcoded credentials for demonstration
+     const validCredentials = {
+          username: "admin",
+          password: "password123"
+     };
+     
+     if (!username || !password) {
+          return res.status(400).json({
+               message: "Username and password are required"
+          });
+     }
+     
+     if (username === validCredentials.username && password === validCredentials.password) {
+          res.json({
+               message: "Login successful",
+               success: true,
+               user: username
+          });
+     } else {
+          res.status(401).json({
+               message: "Invalid username or password",
+               success: false
+          });
+     }
+})
+
 
 app.listen(process.env.PORT || 3000,() => {
      console.log("App is listening in PORT " + process.env.PORT)
